@@ -22,4 +22,4 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
 
 # boot animation
 # PRODUCT_COPY_FILES += \
-    vendor/nosp/proprietary/common/system/media/bootanimation.zip:system/media/bootanimation.zip
+  #  vendor/nosp/proprietary/common/system/media/bootanimation.zip:system/media/bootanimation.zip
