@@ -21,5 +21,5 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
 -include vendor/nosp/products/common_media_effects.mk
 
 # boot animation
-PRODUCT_COPY_FILES += \
+# PRODUCT_COPY_FILES += \
     vendor/nosp/proprietary/common/system/media/bootanimation.zip:system/media/bootanimation.zip
