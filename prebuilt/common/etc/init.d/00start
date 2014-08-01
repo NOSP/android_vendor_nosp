@@ -1,0 +1,18 @@
+#!/system/bin/sh
+log -p i -t start "    Nothing Outruns the Sloth";
+
+$L "Team Nocturnal Presents Sofa King Android";
+$L "_______________________________________________";
+$L "                   TTTTTTTTTTTTTTTTTT          ";
+$L "                   TTTTTTTTTTTTTTTTTT          ";
+$L "                        TTTT                   ";
+$L "                       TTTT                    ";
+$L "                      TTTT                     ";
+$L "                     TTTT                      ";
+$L "                        NNNNNNN        NNNN    ";
+$L "                       NNNN NNNN      NNNN     ";
+$L "                      NNNN   NNNN    NNNN      ";
+$L "                     NNNN     NNNN  NNNN       ";
+$L "                    NNNN       NNNNNNNN        ";
+$L "_______________________________________________";
+$L "Team Nocturnal Presents Sofa King Android";

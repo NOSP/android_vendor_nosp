@@ -1,2 +1,2 @@
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/nosp_hammerhead.mk
+    $(LOCAL_DIR)/hammerhead.mk
