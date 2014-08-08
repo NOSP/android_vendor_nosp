@@ -24,7 +24,7 @@ endif
 
 # init.d support
 PRODUCT_COPY_FILES += \
-    vendor/nosp/prebuilt/common/etc/init.local.rc:root/init.ska.rc \
+    vendor/nosp/prebuilt/common/etc/init.local.rc:root/init.nosp.rc \
     vendor/nosp/prebuilt/common/etc/init.d/00start:system/etc/init.d/00start \
     vendor/nosp/prebuilt/common/etc/init.d/01sysctl:system/etc/init.d/01sysctl \
     vendor/nosp/prebuilt/common/etc/init.d/02permissions:system/etc/init.d/02permissions \
@@ -41,6 +41,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     vendor/nosp/prebuilt/bootanimation/bootanimation.zip:system/media/bootanimation.zip
 
+# Inherit common build.prop overrides
+-include vendor/nosp/configs/common_versions.mk
+
 # World APNs
 PRODUCT_COPY_FILES += \
-    vendor/ska/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml
+    vendor/nosp/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml

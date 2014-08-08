@@ -5,8 +5,9 @@
 # cyanogen
 # AOKP
 #SofaKingAndroid
+#NOSP
 
-. $ANDROID_BUILD_TOP/vendor/ska/tools/colors
+. $ANDROID_BUILD_TOP/vendor/nosp/tools/colors
 
 OUT_TARGET_HOST=`uname -a | grep Darwin`
 if [ -z "$OUT_TARGET_HOST" ]
@@ -47,7 +48,7 @@ if [ ! -f "$OTAPACKAGE" ]; then
 	exit 1
 fi
 
-OPTICHARGER=$ANDROID_BUILD_TOP/vendor/ska/tools/opticharger
+OPTICHARGER=$ANDROID_BUILD_TOP/vendor/nosp/tools/opticharger
 QUIET=-q
 DELETE_BINS="applypatch applypatch_static check_prereq recovery updater"
 
@@ -169,7 +170,7 @@ rm -rf $REPACK/ota/recovery
 # Determine what to name the new signed package
 
 #MODVERSION=`sed -n -e'/ro\.modversion/s/^.*=//p' $REPACK/ota/system/build.prop`
-VERSION=`sed -n -e'/ro.ska.version/s/^.*=//p' $REPACK/ota/system/build.prop`
+VERSION=`sed -n -e'/ro.nosp.version/s/^.*=//p' $REPACK/ota/system/build.prop`
 MODVERSION="$VERSION"
 OUTFILE=$OUT/$MODVERSION.zip
 
@@ -209,7 +210,7 @@ echo -e $CL_CYN"  NNNN   NNNN   NNNN      " $CL_RST
 echo -e $CL_CYN" NNNN    NNNN  NNNN       " $CL_RST
 echo -e $CL_CYN"NNNN     NNNN NNNN        " $CL_RST
 echo -e
-echo -e $CL_CYN"===========Sofa King Android complete==========="$CL_RST
+echo -e $CL_CYN"================NOSP Android complete==========="$CL_RST
 echo -e $CL_CYN"zip:"$CL_MAG" $OUTFILE"$CL_RST
 echo -e $CL_CYN"md5:"$CL_MAG" $(cat $img.md5sum | awk '{ print $1 }')"$CL_RST
 echo -e $CL_CYN"size:"$CL_MAG" $ZIPSIZE"$CL_RST
