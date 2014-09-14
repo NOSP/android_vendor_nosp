@@ -1,5 +1,5 @@
 # Inherit AOSP device configuration for klte.
-$(call inherit-product, device/samsung/klte/full_klte.mk)
+$(call inherit-product, device/samsung/klte/full_kltespr.mk)
 
 # Inherit common product files.
 $(call inherit-product, vendor/nosp/configs/common.mk)
@@ -7,7 +7,7 @@ $(call inherit-product, vendor/nosp/configs/common.mk)
 # Setup device specific product configuration.
 PRODUCT_NAME := cm_klte
 PRODUCT_BRAND := samsung
-PRODUCT_DEVICE := klte
+PRODUCT_DEVICE := kltespr
 PRODUCT_MODEL := GS 5
 PRODUCT_MANUFACTURER := Samsung
 
