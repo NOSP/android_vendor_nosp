@@ -1,1 +1,2 @@
 add_lunch_combo nosp_hammerhead-userdebug
+add_lunch_combo cm_kltespr-userdebug
