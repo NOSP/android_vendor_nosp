@@ -1,0 +1,20 @@
+#!/system/bin/sh
+#
+# Print startup info
+#
+L="log -p i -t nosp"
+
+$L "Welcome to Team-Nocturnal's NOSP Project.";
+$L "========================================";
+$L "           TTTTTTTTTTTTTTTTTT           ";
+$L "            TTTTTTTTTTTTTTT             ";
+$L "                TTTT                    ";
+$L "               TTTT                     ";
+$L "              TTTT                      ";
+$L "             TTTT                       ";
+$L "                NNNNNNN        NNNN     ";
+$L "               NNNN NNNN      NNNN      ";
+$L "              NNNN   NNNN    NNNN       ";
+$L "             NNNN     NNNN  NNNN        ";
+$L "            NNNN       NNNNNNNN         ";
+$L "========================================";

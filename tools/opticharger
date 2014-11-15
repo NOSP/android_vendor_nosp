@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Super-mega opticharger of doom
 # Shrinks apks by running pngcrush or optipng or pngout on png images
@@ -16,16 +16,6 @@ then
 else
     OUT_TARGET_HOST=darwin-x86
 fi
-
-# out/ dir defined elsewhere
-if [ ! -z $OUT_DIR_COMMON_BASE ]; then
-	TREE_NAME=`basename $ANDROID_BUILD_TOP`
-	OUT_DIR=$OUT_DIR_COMMON_BASE/$TREE_NAME
-else
-	OUT_DIR=$ANDROID_BUILD_TOP/out
-fi
-
-. $ANDROID_BUILD_TOP/vendor/nosp/tools/colors
 
 set -e
 QUIET=1
@@ -47,42 +37,58 @@ then
     APKCERTS=$OUT/obj/PACKAGING/target_files_intermediates/$TARGET_PRODUCT-target_files-$TARGET_BUILD_VARIANT.$USER/META/apkcerts.txt
     if [ ! -f "$APKCERTS" ];
     then
-        echo -e $CL_RED"Set APKCERTS to the path to your apkcerts.txt file"$CL_RST
+        echo "Set APKCERTS to the path to your apkcerts.txt file"
         exit 1;
     fi
 fi
 
 if [ ! -f "$APKCERTS" ];
 then
-    echo -e $CL_RED"Invalid path to apkcerts.txt, set APKCERTS to the correct path."$CL_RST
+    echo "Invalid path to apkcerts.txt, set APKCERTS to the correct path."
 fi
 
-if [ "$(which optipng)" != "" ];
+if [ "$(which pngcrush)" != "" ];
 then
     optimize_png () {
-        optipng -nc -nb -o7 -quiet $1 1> /dev/null 2> /dev/null
+        pngcrush -q ${BRUTECRUSH} $1 ${1}.out 1> /dev/null 2> /dev/null
+        mv ${1}.out ${1}
+    }
+elif [ "$(which optipng)" != "" ];
+then
+    optimize_png () {
+        optipng -o7 -quiet $1 1> /dev/null 2> /dev/null
+    }
+elif [ "$(which pngout-static)" != "" ];
+then
+    optimize_png () {
+        pngout-static $1
+    }
+elif [ "$(which pngout)" != "" ];
+then
+    optimize_png () {
+        pngout $1
     }
 else
-    echo -e $CL_RED"Please install pngcrush, optipng, or pngout"$CL_RST
+    echo "Please install pngcrush, optipng, or pngout"
     exit 1;
 fi
 
 if [ "`which aapt`" = "" ];
 then
-    echo -e $CL_RED"Please ensure aapt is in your \$PATH"$CL_RST
+    echo "Please ensure aapt is in your \$PATH"
     exit 1;
 fi
 
 if [ "`which zipalign`" = "" ];
 then
-    echo -e $CL_RED"Please ensure zipalign is in your \$PATH"$CL_RST
+    echo "Please ensure zipalign is in your \$PATH"
     exit 1;
 fi
 
 if [ -e "$1" ];
 then
     NAME=`basename $1`;
-    echo -e $CL_CYN"Optimizing"$CL_RST" $NAME...";
+    echo "Optimizing $NAME...";
 
     if [ "$2" != "" ];
     then
@@ -90,32 +96,27 @@ then
         KEY=build/target/product/security/$2.pk8
         if [ ! -f "$ANDROID_BUILD_TOP/$CERT" ];
         then
-            echo -e $CL_RED"$CERT does not exist!";$CL_RST
+            echo "$CERT does not exist!";
             exit 1;
         fi
     else
         APKINFO=`grep "name=\"$NAME\"" $APKCERTS`;
-        [ $QUIET ] || echo -e "APKINFO: $APKINFO";
+        [ $QUIET ] || echo "APKINFO: $APKINFO";
         if [ "$APKINFO" = "" ];
         then
-            echo -e $CL_RED"No apk info for $NAME";$CL_RST
+            echo "No apk info for $NAME";
             exit 1;
         fi
-        CERT=`echo -e $APKINFO | awk {'print $2'} | cut -f 2 -d "=" | tr -d "\""`;
-        KEY=`echo -e $APKINFO | awk {'print $3'} | cut -f 2 -d "=" | tr -d "\""`;
+        CERT=`echo $APKINFO | awk {'print $2'} | cut -f 2 -d "=" | tr -d "\""`;
+        KEY=`echo $APKINFO | awk {'print $3'} | cut -f 2 -d "=" | tr -d "\""`;
         if [ "$CERT" = "" ];
         then
-            echo -e $CL_RED"Unable to find certificate for $NAME"$CL_RST
-            exit 1;
-        fi
-        if [ "$CERT" = "PRESIGNED" ];
-        then
-            echo -e $CL_GRN"$NAME is presigned, skipping"$CL_RST
+            echo "Unable to find certificate for $NAME"
             exit 1;
         fi
     fi
 
-    [ $QUIET ] || echo -e $CL_YLW"Certificate:"$CL_RST" $CERT";
+    [ $QUIET ] || echo "Certificate: $CERT";
 
     [ -d $TMPDIR/$NAME ] && rm -rf $TMPDIR/$NAME
     mkdir -p $TMPDIR/$NAME
@@ -124,19 +125,19 @@ then
     unzip -q $BASE/$1
     for x in `find . -name "*.png" | grep -v "\.9.png$" | tr "\n" " "`
     do
-        [ $QUIET ] || echo -e $CL_GRN"Crushing $x"$CL_RST
+        [ $QUIET ] || echo "Crushing $x"
         optimize_png $x
     done
     cp $BASE/$1 $BASE/$1.old
 
-    [ $QUIET ] || echo -e $CL_GRN"Repacking apk.."$CL_RST
-    aapt p -0 .dat -0 .dict -0 .arsc -F $NAME .
+    [ $QUIET ] || echo "Repacking apk.."
+    aapt p -0 .dat -0 .dict -F $NAME .
+    
+    [ $QUIET ] || echo "Resigning with cert: `echo $CERT`"
 
-    [ $QUIET ] || echo -e $CL_YLW"Resigning with cert: `echo -e $CERT`"$CL_RST
-
-    [ $QUIET ] || echo -e java -jar $OUT_DIR/host/$OUT_TARGET_HOST/framework/signapk.jar $ANDROID_BUILD_TOP/$CERT $ANDROID_BUILD_TOP/$KEY $NAME signed_$NAME
-    java -jar $OUT_DIR/host/$OUT_TARGET_HOST/framework/signapk.jar $ANDROID_BUILD_TOP/$CERT $ANDROID_BUILD_TOP/$KEY $NAME signed_$NAME
-    [ $QUIET ] || echo -e $CL_GRN"Zipalign.."$CL_RST
+    [ $QUIET ] || echo java -jar $ANDROID_BUILD_TOP/out/host/$OUT_TARGET_HOST/framework/signapk.jar $ANDROID_BUILD_TOP/$CERT $ANDROID_BUILD_TOP/$KEY $NAME signed_$NAME
+    java -jar $ANDROID_BUILD_TOP/out/host/$OUT_TARGET_HOST/framework/signapk.jar $ANDROID_BUILD_TOP/$CERT $ANDROID_BUILD_TOP/$KEY $NAME signed_$NAME
+    [ $QUIET ] || echo "Zipalign.."
     zipalign -f 4 signed_$NAME $BASE/$1
     if [ ! $QUIET ]; then
         ls -l $BASE/$1.old
@@ -144,5 +145,6 @@ then
     fi
     rm $BASE/$1.old
 else
-    echo -e "Usage: $0 [apk file]"
+    echo "Usage: $0 [apk file]"
 fi
+

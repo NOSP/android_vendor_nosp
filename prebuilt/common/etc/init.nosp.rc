@@ -1,0 +1,33 @@
+import init.power.rc
+
+on init
+    export ANDROID_CACHE /cache
+    export TERMINFO /system/etc/terminfo
+
+on post-fs-data
+
+    # Run sysinit
+    start sysinit
+
+
+# sysinit (/system/etc/init.d)
+service sysinit /system/bin/sysinit
+    user root
+    oneshot
+    disabled
+
+# su daemon
+service su_daemon /system/xbin/su --daemon
+    class main
+
+on property:persist.sys.root_access=0
+    stop su_daemon
+
+on property:persist.sys.root_access=2
+    stop su_daemon
+
+on property:persist.sys.root_access=1
+    start su_daemon
+
+on property:persist.sys.root_access=3
+    start su_daemon
