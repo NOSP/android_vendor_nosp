@@ -1,3 +1,4 @@
 add_lunch_combo nosp_kltespr-eng
 add_lunch_combo nosp_hammerhead-eng
+add_lunch_combo nosp_bacon-eng
 
