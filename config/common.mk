@@ -12,6 +12,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.com.android.dateformat=MM-dd-yyyy \
     ro.com.android.dataroaming=false
 
+# Disable excessive dalvik debug messages
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.debug.alloc=0
+    
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.ringtone=Pyxis.ogg \
     ro.config.notification_sound=Merope.ogg \
